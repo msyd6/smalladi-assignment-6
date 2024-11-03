@@ -1,4 +1,4 @@
-name: Deploy Site to GitHub Pages
+name: Deploy static content to Pages
 
 on:
   push:
@@ -11,32 +11,31 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "gh-pages-deployment"
+  group: "pages"
   cancel-in-progress: false
 
 jobs:
-  deploy_static_site:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Retrieve Source Code
+      - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Configure GitHub Pages Environment
+      - name: Setup Pages
         uses: actions/configure-pages@v5
-
-      - name: Prepare Static Site Assets
+      - name: Build static content
         run: |
-          # Define the output directory
-          output_dir="public"
-          mkdir -p $output_dir
-          # Copy primary HTML file and any associated assets to the output directory
-          cp index.html $output_dir/
-          cp -r static $output_dir/
-
-      - name: Package Deployment Files
+          # Ensure the build directory exists
+          mkdir -p build
+          # Copy index.html and other static files to the build directory
+          cp index.html build/
+          cp -r static build/
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'public'
+          path: 'build'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
       - name: Publish to GitHub Pages
         id: deployment
