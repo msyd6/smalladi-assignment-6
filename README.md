@@ -1,4 +1,4 @@
-# Assignment Analysis and Takeaways
+# Assignment Analysis and Observations
 
 When experimenting with different values for sample size (N), mean (μ), variance (σ²), and the number of simulations (S), we can observe interesting patterns in the scatter plot and histograms of slopes and intercepts. Here’s an analysis based on how these parameters impact the results:
 
