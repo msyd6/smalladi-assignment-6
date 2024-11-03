@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Regression Simulation</title>
+    <style>
+        body {
+            font-family: Verdana, sans-serif;
+            background-color: #eaeaea;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .wrapper {
+            width: 85%;
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #3498db;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 4px solid #2980b9;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .form-section {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        .form-section label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+        .form-section input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+        }
+        .form-section .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        .form-section button {
+            width: 32%;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .form-section button.submit {
+            background-color: #3498db;
+            color: white;
+        }
+        .form-section button.submit:hover {
+            background-color: #2980b9;
+        }
+        .form-section button.reset, .form-section button.random {
+            background-color: #bdc3c7;
+            color: #333;
+        }
+        .form-section button.reset:hover, .form-section button.random:hover {
+            background-color: #a4b0b8;
+        }
+        .results {
+            background: #fff;
+            padding: 25px;
+            margin-top: 20px;
+            border-radius: 6px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        .results h2, .results h3 {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .results img {
+            display: block;
+            max-width: 100%;
+            margin: 10px auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        .results .text-info {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 15px;
+        }
+    </style>
+    <script>
+        function resetFields() {
+            document.querySelectorAll('input[type="number"]').forEach(input => input.value = '');
+        }
+
+        function populateRandomValues() {
+            document.getElementById('N').value = Math.floor(Math.random() * 91) + 10;
+            document.getElementById('mu').value = (Math.random() * 10).toFixed(2);
+            document.getElementById('sigma2').value = (Math.random() * 10).toFixed(2);
+            document.getElementById('S').value = Math.floor(Math.random() * 91) + 10;
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Linear Regression Simulation</h1>
+    </header>
+    <div class="wrapper">
+        <section class="form-section">
+            <form method="post">
+                <label for="N">Sample Size (N):</label>
+                <input type="number" id="N" name="N" required>
+
+                <label for="mu">Mean (μ):</label>
+                <input type="number" step="any" id="mu" name="mu" required>
+
+                <label for="sigma2">Variance (σ²):</label>
+                <input type="number" step="any" id="sigma2" name="sigma2" required>
+
+                <label for="S">Simulations (S):</label>
+                <input type="number" id="S" name="S" required>
+
+                <div class="buttons">
+                    <button type="submit" class="submit">Generate</button>
+                    <button type="button" class="reset" onclick="resetFields()">Clear</button>
+                    <button type="button" class="random" onclick="populateRandomValues()">Randomize</button>
+                </div>
+            </form>
+        </section>
+
+        {% if plot1 and plot2 %}
+        <div class="results">
+            <h2>Results</h2>
+            <div>
+                <h3>Scatter Plot with Regression Line</h3>
+                <img src="{{ url_for('static', filename=plot1.split('/')[-1]) }}" alt="Scatter Plot">
+            </div>
+            <div>
+                <h3>Distribution of Slopes and Intercepts</h3>
+                <img src="{{ url_for('static', filename=plot2.split('/')[-1]) }}" alt="Histogram of Slopes and Intercepts">
+            </div>
+            <div class="text-info">
+                <p>Proportion of slopes more extreme than initial slope: {{ slope_extreme }}</p>
+                <p>Proportion of intercepts more extreme than initial intercept: {{ intercept_extreme }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
